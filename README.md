@@ -209,7 +209,7 @@ The following settings can be included in a `StarCharter` configuration file:
 * `grid_col` - Colour to use when drawing grid of RA/Dec lines
 * `label_ecliptic` - Boolean (0 or 1) indicating whether to label the months along the ecliptic, showing the Sun's annual progress
 * `label_font_size_scaling` - Scaling factor to be applied to the font size of all star and DSO labels (default 1.0)
-* `language` - The language used for the constellation names. Either "english" or "french".
+* `language` - The language used for the constellation names. Either "english", "french" or "italian".
 * `mag_alpha` - The multiplicative scaling factor to apply to the radii of stars differing in magnitude by one <mag_step>
 * `mag_max` - Used to regulate the size of stars. A star of this magnitude is drawn with size mag_size_norm. Also, this is the brightest magnitude of star which is shown in the magnitude key below the chart.
 * `mag_min` - The faintest magnitude of star which we draw
