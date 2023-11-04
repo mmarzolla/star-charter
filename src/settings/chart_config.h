@@ -51,6 +51,7 @@
 // Language options
 #define SW_LANG_EN 1
 #define SW_LANG_FR 2
+#define SW_LANG_IT 3
 
 // Options for designs of constellation stick figures
 #define SW_STICKS_SIMPLIFIED 0
@@ -412,6 +413,11 @@ typedef struct chart_config {
     cairo_t *cairo_draw;
 
 } chart_config;
+
+extern const char* GALAXY_LABEL;
+extern const char* BRIGHT_NEBULA_LABEL;
+extern const char* OPEN_CLUSTER_LABEL;
+extern const char* GLOBULAR_CLUSTER_LABEL;
 
 void default_config(chart_config *i);
 

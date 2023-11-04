@@ -316,7 +316,7 @@ double draw_dso_symbol_key(chart_config *s, double legend_y_pos) {
 
     // Write a text label next to it
     {
-        const char *label = "Galaxy";
+        const char *label = GALAXY_LABEL;
         cairo_set_source_rgb(s->cairo_draw, 0, 0, 0);
         cairo_text_extents(s->cairo_draw, label, &extents);
         cairo_move_to(s->cairo_draw,
@@ -334,7 +334,7 @@ double draw_dso_symbol_key(chart_config *s, double legend_y_pos) {
 
     // Write a text label next to it
     {
-        const char *label = "Bright nebula";
+        const char *label = BRIGHT_NEBULA_LABEL;
         cairo_set_source_rgb(s->cairo_draw, 0, 0, 0);
         cairo_text_extents(s->cairo_draw, label, &extents);
         cairo_move_to(s->cairo_draw,
@@ -352,7 +352,7 @@ double draw_dso_symbol_key(chart_config *s, double legend_y_pos) {
 
     // Write a text label next to it
     {
-        const char *label = "Open cluster";
+        const char *label = OPEN_CLUSTER_LABEL;
         cairo_set_source_rgb(s->cairo_draw, 0, 0, 0);
         cairo_text_extents(s->cairo_draw, label, &extents);
         cairo_move_to(s->cairo_draw,
@@ -370,7 +370,7 @@ double draw_dso_symbol_key(chart_config *s, double legend_y_pos) {
 
     // Write a text label next to it
     {
-        const char *label = "Globular cluster";
+        const char *label = GLOBULAR_CLUSTER_LABEL;
         cairo_set_source_rgb(s->cairo_draw, 0, 0, 0);
         cairo_text_extents(s->cairo_draw, label, &extents);
         cairo_move_to(s->cairo_draw,

@@ -1,5 +1,5 @@
 // settings.c
-// 
+//
 // -------------------------------------------------
 // Copyright 2015-2022 Dominic Ford
 //
@@ -30,6 +30,39 @@
 #include "chart_config.h"
 
 #include "astroGraphics/stars.h"
+
+static const char* GALAXY_LABELS[] =
+    {
+     "Galaxy",
+     "Galaxy",
+     "Galassia"
+    };
+
+static const char* BRIGHT_NEBULA_LABELS[] =
+    {
+     "Bright Nebula",
+     "Bright Nebula",
+     "Nebulosa"
+    };
+
+static const char* OPEN_CLUSTER_LABELS[] =
+    {
+     "Open Cluster",
+     "Open Cluster",
+     "Amm. Aperto"
+    };
+
+static const char* GLOBULAR_CLUSTER_LABELS[] =
+    {
+     "Globular Cluster",
+     "Globular Cluster",
+     "Amm. Globulare"
+    };
+
+const char* GALAXY_LABEL;
+const char* BRIGHT_NEBULA_LABEL;
+const char* OPEN_CLUSTER_LABEL;
+const char* GLOBULAR_CLUSTER_LABEL;
 
 void default_config(chart_config *i) {
     i->language = SW_LANG_EN;
@@ -151,8 +184,11 @@ void config_init(chart_config *i) {
     i->y_max = i->wlin / 2 * i->aspect;
     tweak_magnitude_limits(i);
     i->mag_highest = i->mag_max;
+    GALAXY_LABEL = GALAXY_LABELS[i->language - 1];
+    OPEN_CLUSTER_LABEL = OPEN_CLUSTER_LABELS[i->language - 1];
+    BRIGHT_NEBULA_LABEL = BRIGHT_NEBULA_LABELS[i->language - 1];
+    GLOBULAR_CLUSTER_LABEL = GLOBULAR_CLUSTER_LABELS[i->language - 1];
 }
 
 void config_close(chart_config *i) {
 }
-

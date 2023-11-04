@@ -638,6 +638,7 @@ int chart_label(cairo_page *p, chart_config *s, colour colour, const char *label
         }
 
         // If <make_background> is set, we smear the background around the label with a dark colour
+        /*
         if (make_background && s->plot_galaxy_map) {
             double theta;
             const double offset = 0.2 * s->mm;
@@ -647,6 +648,7 @@ int chart_label(cairo_page *p, chart_config *s, colour colour, const char *label
                 cairo_show_text(s->cairo_draw, label);
             }
         }
+        */
 
         // Render the text label itself
         cairo_set_source_rgb(s->cairo_draw, colour.red, colour.grn, colour.blu);

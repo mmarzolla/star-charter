@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 
 #include <gsl/gsl_math.h>
 
@@ -201,8 +202,13 @@ void plot_constellation_names(chart_config *s, cairo_page *page) {
     FILE *file;
     char line[FNAME_LENGTH];
 
-    strcpy(line, SRCDIR "../data/constellations/name_places.dat");
-    if (s->language == SW_LANG_FR) strcpy(line, SRCDIR "../data/constellations/name_places_fr.dat");
+    if (s->language == SW_LANG_FR)
+        strcpy(line, SRCDIR "../data/constellations/name_places_fr.dat");
+    else if (s->language == SW_LANG_IT)
+        strcpy(line, SRCDIR "../data/constellations/name_places_it.dat");
+    else
+        strcpy(line, SRCDIR "../data/constellations/name_places.dat");
+
     file = fopen(line, "r");
     if (file == NULL) stch_fatal(__FILE__, __LINE__, "Could not open constellation name data");
 
@@ -235,7 +241,10 @@ void plot_constellation_names(chart_config *s, cairo_page *page) {
             }
 
             char *label = replace_at_with_space(name);
-
+            char *c;
+            for (c=label; *c; c++) {
+                *c = toupper(*c);
+            }
             chart_label_buffer(page, s, s->constellation_label_col, label,
                                &(label_position) {x, y, 0, 0, 0}, 1,
                                0, 1, 1.4 * s->label_font_size_scaling,
