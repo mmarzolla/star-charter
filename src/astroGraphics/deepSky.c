@@ -1,5 +1,5 @@
 // deepSky.c
-// 
+//
 // -------------------------------------------------
 // Copyright 2015-2022 Dominic Ford
 //
@@ -137,6 +137,25 @@ void plot_deep_sky_objects(chart_config *s, cairo_page *page, int messier_only) 
         double axis_pa = get_float(line_ptr, NULL); // position angle; degrees
         const char *type_string = next_word(line_ptr);
 
+        // Create a name for this object
+        char object_name[FNAME_LENGTH] = "";
+        if (messier_num > 0) {
+            snprintf(object_name, FNAME_LENGTH, "M%d", messier_num);
+        } else if (ngc_num > 0) {
+            snprintf(object_name, FNAME_LENGTH, "NGC%d", ngc_num);
+        } else if (ic_num > 0) {
+            snprintf(object_name, FNAME_LENGTH, "IC%d", ic_num);
+        }
+
+        const int force_label = (NULL != strstr(s->dso_to_label, object_name));
+
+        if (((s->dso_to_label[0] == '\0') ||
+             (!force_label)) &&
+            ( (messier_only && (messier_num == 0)) ||
+              ((s->dso_mag_min < 50) && (s->dso_mag_min < mag)) )) {
+                continue;
+        }
+#if 0
         // If we're only showing Messier objects; only show them
         if (messier_only && (messier_num == 0)) {
             continue;
@@ -146,7 +165,7 @@ void plot_deep_sky_objects(chart_config *s, cairo_page *page, int messier_only) 
         if ((s->dso_mag_min < 50) && (s->dso_mag_min < mag)) {
             continue;
         }
-
+#endif
         // Project RA and Dec of object into physical coordinates on the star chart
         double x, y;
         plane_project(&x, &y, s, ra * M_PI / 12, dec * M_PI / 180, 0);
@@ -163,16 +182,6 @@ void plot_deep_sky_objects(chart_config *s, cairo_page *page, int messier_only) 
         // Check if we've exceeded maximum number of objects
         if (dso_counter > s->maximum_dso_count) continue;
         dso_counter++;
-
-        // Create a name for this object
-        char object_name[FNAME_LENGTH] = "";
-        if (messier_num > 0) {
-            snprintf(object_name, FNAME_LENGTH, "M%d", messier_num);
-        } else if (ngc_num > 0) {
-            snprintf(object_name, FNAME_LENGTH, "NGC%d", ngc_num);
-        } else if (ic_num > 0) {
-            snprintf(object_name, FNAME_LENGTH, "IC%d", ic_num);
-        }
 
         // Draw a symbol showing the position of this object
         double x_canvas, y_canvas, rendered_symbol_width = 0;
@@ -236,7 +245,10 @@ void plot_deep_sky_objects(chart_config *s, cairo_page *page, int messier_only) 
         }
 
         // Consider whether to write a text label next to this deep sky object
-        if ((mag < s->dso_label_mag_min) && (label_counter < s->maximum_dso_label_count)) {
+        if (((s->dso_to_label[0] == '\0') &&
+             (mag < s->dso_label_mag_min) &&
+             (label_counter < s->maximum_dso_label_count)) ||
+            force_label) {
 
             // Write a text label for this object
             const double horizontal_offset = 1.1 * s->mm + rendered_symbol_width;
@@ -245,11 +257,18 @@ void plot_deep_sky_objects(chart_config *s, cairo_page *page, int messier_only) 
             const int multiple_labels = show_name && show_mag;
 
             if (show_name) {
+                /*
                 chart_label_buffer(page, s, s->dso_label_col, object_name,
                                    (label_position[2]) {{x, y, horizontal_offset,  -1, 0},
                                                         {x, y, -horizontal_offset, 1,  0}}, 2,
                                    multiple_labels, 0, 1.2 * s->label_font_size_scaling,
                                    0, 0, 0, mag);
+                */
+                chart_label(page, s, s->dso_label_col, object_name,
+                            (label_position[2]) {{x, y, horizontal_offset,  -1, 0},
+                                                     {x, y, -horizontal_offset, 1,  0}}, 2,
+                            multiple_labels, 0, 1.2 * s->label_font_size_scaling,
+                            0, 0, 0, mag);
                 label_counter++;
             }
             if (show_mag) {

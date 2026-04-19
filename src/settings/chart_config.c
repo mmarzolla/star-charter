@@ -153,6 +153,7 @@ void default_config(chart_config *i) {
     strcpy(i->output_filename, "chart");
     strcpy(i->copyright, "Produced with StarCharter. https://github.com/dcf21/star-charter");
     strcpy(i->title, "");
+    strcpy(i->dso_to_label, "");
 
     // ----------------------------------------
     // Settings which we don't currently expose

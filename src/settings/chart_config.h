@@ -1,5 +1,5 @@
 // settings.h
-// 
+//
 // -------------------------------------------------
 // Copyright 2015-2022 Dominic Ford
 //
@@ -367,6 +367,9 @@ typedef struct chart_config {
 
     //! Scaling factor to be applied to the font size of all star and DSO labels
     double label_font_size_scaling;
+
+    //! Comma-separated list of names of DSOs to label (note: this config structure owns this memory block and should therefore deallocate it when no longer needed)
+    char dso_to_label[FNAME_LENGTH];
 
     // ----------------------------------------
     // Settings which we don't currently expose

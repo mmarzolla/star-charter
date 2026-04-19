@@ -231,12 +231,12 @@ int main(int argc, char **argv) {
         if ((strcmp(argv[i], "-v") == 0) || (strcmp(argv[i], "-version") == 0) || (strcmp(argv[i], "--version") == 0)) {
             // Switches -v and --version cause the version number to be printed
             stch_report(version_string);
-            return 0;
+            return EXIT_SUCCESS;
         } else if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "-help") == 0) ||
                    (strcmp(argv[i], "--help") == 0)) {
             // Switches -h and --help cause the usage string to be displayed
             stch_report(help_string);
-            return 0;
+            return EXIT_SUCCESS;
         } else {
             // Return an error if an unknown switch is received
             snprintf(temp_err_string, FNAME_LENGTH,
@@ -244,7 +244,7 @@ int main(int argc, char **argv) {
                      "available commandline options.",
                      argv[i]);
             stch_error(temp_err_string);
-            return 1;
+            return EXIT_FAILURE;
         }
     }
 
@@ -255,7 +255,7 @@ int main(int argc, char **argv) {
                  "Multiple filenames appear to have been supplied. Type 'starchart.bin -help' for a list of "
                  "available commandline options.");
         stch_error(temp_err_string);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // Set up default settings for star charts
@@ -267,7 +267,7 @@ int main(int argc, char **argv) {
         if ((infile = fopen(filename, "r")) == NULL) {
             snprintf(temp_err_string, FNAME_LENGTH, "StarCharter could not open input file '%s'.", filename);
             stch_error(temp_err_string);
-            return 1;
+            return EXIT_FAILURE;
         }
     } else {
         // If no filename was supplied on the command line, read configuration from stdin
@@ -319,7 +319,7 @@ int main(int argc, char **argv) {
         if (settings_destination == NULL) {
             snprintf(temp_err_string, FNAME_LENGTH, "Bad input file. Must begin with either 'DEFAULTS', or 'CHART'.");
             stch_error(temp_err_string);
-            return 1;
+            return EXIT_FAILURE;
         }
 
         // Parse the configuration setting, which should be of the form <key = value>
@@ -394,11 +394,12 @@ int main(int argc, char **argv) {
             //! language - The language used for the constellation names. Either "english" or "french".
             if (strcmp(key_val, "english") == 0) settings_destination->language = SW_LANG_EN;
             else if (strcmp(key_val, "french") == 0) settings_destination->language = SW_LANG_FR;
+            else if (strcmp(key_val, "italian") == 0) settings_destination->language = SW_LANG_IT;
             else {
                 snprintf(temp_err_string, FNAME_LENGTH,
-                         "Bad input file. language should equal 'english', or 'french'.");
+                         "Bad input file. language should equal 'english', 'french' or 'italian'.");
                 stch_error(temp_err_string);
-                return 1;
+                return EXIT_FAILURE;
             }
             continue;
         } else if (strcmp(key, "font_size") == 0) {
@@ -481,7 +482,7 @@ int main(int argc, char **argv) {
                 snprintf(temp_err_string, FNAME_LENGTH,
                          "Bad input file. projection should equal 'flat', 'gnomonic', 'sphere' or 'alt_az'.");
                 stch_error(temp_err_string);
-                return 1;
+                return EXIT_FAILURE;
             }
             continue;
         } else if (strcmp(key, "coords") == 0) {
@@ -491,7 +492,7 @@ int main(int argc, char **argv) {
             else {
                 snprintf(temp_err_string, FNAME_LENGTH, "Bad input file. coords should equal 'ra_dec' or 'galactic'.");
                 stch_error(temp_err_string);
-                return 1;
+                return EXIT_FAILURE;
             }
             continue;
         } else if (strcmp(key, "angular_width") == 0) {
@@ -547,7 +548,7 @@ int main(int argc, char **argv) {
                 snprintf(temp_err_string, FNAME_LENGTH, "Bad input file. "
                                                         "constellation_stick_design should equal 'simplified' or 'rey'.");
                 stch_error(temp_err_string);
-                return 1;
+                return EXIT_FAILURE;
             }
             continue;
         } else if (strcmp(key, "constellation_highlight") == 0) {
@@ -616,7 +617,7 @@ int main(int argc, char **argv) {
                 snprintf(temp_err_string, FNAME_LENGTH,
                          "Bad input file. star_catalogue should equal 'hipparcos', 'ybsc' or 'hd'.");
                 stch_error(temp_err_string);
-                return 1;
+                return EXIT_FAILURE;
             }
             continue;
         } else if (strcmp(key, "star_mag_labels") == 0) {
@@ -815,10 +816,17 @@ int main(int argc, char **argv) {
             //! same directory as StarCharter, the default value should be <../ephemeris-compute-de430/bin/ephem.bin>.
             strcpy(settings_destination->ephemeris_compute_path, key_val);
             continue;
+        } else if (strcmp(key, "dso_to_label") == 0) {
+            //! get the list of DSOs to label. Only these will be
+            //! labeled in the plot; for the other DSOs that would be
+            //! displayed, only the symbol is put onto the chart but
+            //! not the label.
+            strcpy(settings_destination->dso_to_label, key_val);
+            continue;
         } else {
             snprintf(temp_err_string, FNAME_LENGTH, "Bad input file. Unrecognised setting '%s'.", key);
             stch_error(temp_err_string);
-            return 1;
+            return EXIT_FAILURE;
         }
     }
     if (got_chart) render_chart(&this_chart_config); // Render final star chart
@@ -830,5 +838,5 @@ int main(int argc, char **argv) {
     lt_freeAll(0);
     lt_memoryStop();
     if (DEBUG) stch_log("Terminating normally.");
-    return 0;
+    return EXIT_SUCCESS;
 }
